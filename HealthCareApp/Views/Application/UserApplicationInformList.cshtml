@@ -1,0 +1,113 @@
+﻿
+@using Models.Enums
+@using Core.Extentions
+@using Repository.Helpers
+@model UserApplicationListViewModel
+
+@{
+    <style>
+        .modal-backdrop {
+            display: none !important;
+        }
+    </style>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-header-title" style="color: midnightblue">Başvuru Listesi </h5>
+            </div>
+            <div class="card-body">
+                <search-field transfer-items="@Model.TransferTypeEnumList" place-holder="Başvurusu Arama..."></search-field>
+                <br />
+                <table id="grid" data-source="@Url.Action("GetUserApplicationList","Application" ,new {Status=1})" class="table table-bordered"></table>
+            </div>
+        </div>
+    </div>
+}
+<div class="modal fade" id="statemodal" style="margin-top: 2%;margin-bottom: 2%;"  tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closemodal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="basvuruid"></div>
+
+                <div class="position-relative row form-group">
+                    <label for="transfertype" class="col-sm-2 col-form-label">Başvuru Durumu</label>
+                    <div class="col-sm-10">
+                        <select name="select" id="statetype" class="form-control" placheolder="Seçim Yapınız">
+                            <option value="3">Durum Seçiniz</option>
+                            <option value="0">İptal</option>
+                            @if (SessionHelper.DefaultSession.UserType == 1)
+                            {
+                                <option value="2"> Bulundu</option>
+                            }
+                      
+                        </select>
+                    </div>
+                </div>
+
+                <div id="modalicerikiptal" hidden="true">
+                    <div class='position-relative row form-group'>
+                        <label for='desc' class='col-sm-2 col-form-label'> İptal Nedeni</label>
+                        <div class='col-sm-10'><textarea name='text' required id='desc' class='form-control'></textarea></div>
+                    </div>
+                    <button class='btn btn-outline-success' id='iptalkaydet' style="margin-left: 85%;margin-top: 10px">Durum Kaydet</button>
+
+                </div>
+
+                <div class='position-relative row form-group' id="platform" hidden="true">
+                    <label for='platformtype' class='col-sm-2 col-form-label'>Platform</label>
+                    <div class='col-sm-10'>
+                        <select id='platformtype' class='form-control' placheolder='Seçim Yapınız'>
+                            <option value='3'>Başka bir Platform</option>
+                            <option value='2'>Bu Platform</option>
+                        </select>
+                    </div>  <br /><br />
+                
+                    <div id="buplatform"class='row position-relative form-group'  style="margin-top: 10px;"hidden="true">
+                       
+                        <label for='platformtype' class='col-sm-2 col-form-label' style="margin-left: 15px">Donör Ara</label>
+                        <div class='col-sm-4'>
+                            <input type='text' id="searchdonor" class='form-control' placeholder="Donor Başvurusu Arama...">
+                        </div>
+                        <br /><br />
+
+                        <table id="donorgrid" class="table table-bordered" width="95%"></table>
+                        
+
+                    </div>
+
+                    <button class='btn btn-outline-success' id='bulundukaydet' style="margin-left: 85%;margin-top: 10px">Durum Kaydet</button>
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-shadow p-2" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="filemodal" style="margin-top: 2%;margin-bottom: 2%;" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modalicerik">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-shadow p-2 closemodal" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/PageJs/UserApplicationInformList.js"></script>
+

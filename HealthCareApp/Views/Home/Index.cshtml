@@ -1,0 +1,65 @@
+﻿@using Repository.Helpers
+@using Models.Enums
+@using Core.Extentions
+@model Models.Application.IndexChartReturnModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+@if (SessionHelper.DefaultSession.Id != 0)
+{
+    <div class="row">
+        <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6">
+            <div class="card mb-3 widget-content bg-night-fade">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">@SessionHelper.DefaultSession.FirstName &nbsp; @SessionHelper.DefaultSession.LastName</div>
+                        <div class="widget-subheading">@SessionHelper.DefaultSession.IdentityNumber</div>
+                    </div>
+                    <div class="widget-content-right">
+
+                        <div class="widget-numbers text-white"><span>@(((BloodGroupEnum) SessionHelper.DefaultSession.BloodGroup).GetDescription())</span><span>&nbsp;@(((RhEnum) SessionHelper.DefaultSession.Rh).GetDescription())</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="main-card mb-3 card">
+            <div class="card-header"> <h5 class="card-title">Donör durumları</h5></div>
+            <div class="card-body">
+                <canvas id="myChart" width="385" height="192" style="display: block; height: 154px; width: 308px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var xValues = ["Bekliyor", "İptal", "Bu PlatFormdan Bulundu"];
+    var yValues = [@Model.DonorAppStatus.Bekliyor, @Model.DonorAppStatus.Iptal,@Model.DonorAppStatus.BuPlatformdanBulundu];
+    var barColors = [
+        "#4FC3F7",
+        "#D50000",
+        "#64DD17"
+    ];
+
+    new Chart("myChart", {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Donör Durum"
+            }
+        }
+    });
+</script>
